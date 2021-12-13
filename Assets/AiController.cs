@@ -2,15 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AiController : MonoBehaviour
+public class AiController : Controller
 {
     private bool canGo = false;
-    private MoveController moveController;
+
+    public float speedMultiplier = 1;
+
     // Start is called before the first frame update
-    void Start()
+    public override void Start()
     {
-        TimeManager.Instance.StateChanged += OnStateChanged;
-        moveController = GetComponent<MoveController>();
+        base.Start();
+        speedMultiplier = Random.Range(0.9f, 1.2f);
+        TimeManager.Instance.StateChanged += OnStateChanged;   
     }
 
     private void OnStateChanged(bool canGo) {
@@ -21,6 +24,6 @@ public class AiController : MonoBehaviour
     void Update()
     {
         if (canGo)
-            moveController.Move(Time.deltaTime);
+            moveController.Move(Time.deltaTime * speedMultiplier);
     }
 }
