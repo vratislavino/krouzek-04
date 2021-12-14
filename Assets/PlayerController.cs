@@ -4,11 +4,16 @@ using UnityEngine;
 
 public class PlayerController : Controller
 {
+    bool isMoving = false;
+
     // Start is called before the first frame update
     public override void Start()
     {
         base.Start();
+    }
 
+    public override bool IsMoving() {
+        return isMoving;
     }
 
     // Update is called once per frame
@@ -16,6 +21,9 @@ public class PlayerController : Controller
     {
         if(Input.GetKey(KeyCode.W)) {
             moveController.Move(Time.deltaTime * 2f);
+            isMoving = true;
+        } else {
+            isMoving = false;
         }
     }
 }
