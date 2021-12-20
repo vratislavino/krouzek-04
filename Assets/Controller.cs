@@ -19,10 +19,16 @@ public class Controller : MonoBehaviour
     }
 
     public void Die() {
-        var p = Instantiate(DeathEffect, transform.position, Quaternion.identity);
-        p.Emit(300);
+        var p = Instantiate(DeathEffect, transform.position, transform.rotation * Quaternion.Euler(0,180,0));
+        p.Emit(1);
         Destroy(p.gameObject, 1f);
-        gameObject.SetActive(false);
+        //transform.Rotate(transform.position - Vector3.up * 0.5f, 90);
+
+        rigidbody.constraints = RigidbodyConstraints.None;
+        rigidbody.AddForce(-Vector3.forward, ForceMode.Force);
+        //Destroy(gameObject, 1f);
+        //gameObject.SetActive(false);
+        enabled = false;
     }
 
     public virtual bool IsMoving() {
