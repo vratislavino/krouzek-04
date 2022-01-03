@@ -1,9 +1,12 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Controller : MonoBehaviour
 {
+    public event Action<Controller> PlayerWon;
+
     protected MoveController moveController;
     protected new Rigidbody rigidbody;
 
@@ -18,14 +21,22 @@ public class Controller : MonoBehaviour
         rigidbody = GetComponent<Rigidbody>();
     }
 
-    public void Die() {
+    public void Win() {
+        PlayerWon?.Invoke(this);
+        enabled = false;
+    }
+
+    public void Die(Vector3 dollPos) {
         var p = Instantiate(DeathEffect, transform.position, transform.rotation * Quaternion.Euler(0,180,0));
         p.Emit(1);
         Destroy(p.gameObject, 1f);
         //transform.Rotate(transform.position - Vector3.up * 0.5f, 90);
 
+        var dir = transform.position - dollPos;
+        dir.Normalize();
+
         rigidbody.constraints = RigidbodyConstraints.None;
-        rigidbody.AddForce(-Vector3.forward, ForceMode.Force);
+        rigidbody.AddForce(dir*10, ForceMode.Impulse);
         //Destroy(gameObject, 1f);
         //gameObject.SetActive(false);
         enabled = false;

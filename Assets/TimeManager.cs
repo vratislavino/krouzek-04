@@ -8,6 +8,9 @@ public class TimeManager : MonoBehaviour
 {
     public event Action<bool> StateChanged;
 
+    private new AudioSource audio;
+    public SoundController soundController;
+
     private static TimeManager instance;
     public static TimeManager Instance {
         get { 
@@ -33,6 +36,7 @@ public class TimeManager : MonoBehaviour
 
     private void Awake() {
         instance = this;
+        audio = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -42,7 +46,20 @@ public class TimeManager : MonoBehaviour
         if(time > TurnInterval) {
             CanGo = !canGo;
             TurnInterval = UnityEngine.Random.Range(0.5f, 2f);
+            if(canGo && soundController.SoundOn) {
+                PlaySound();
+            }
             time = 0;
         }
+    }
+
+    private void PlaySound() {
+
+        var clipLen = audio.clip.length;
+        // 5s
+        var ratio = TurnInterval / clipLen;
+        audio.pitch = 1 / ratio;
+
+        audio.Play();
     }
 }

@@ -5,15 +5,23 @@ using UnityEngine;
 
 public class Killer : MonoBehaviour
 {
+    public GameObject DollReference;
     bool shouldKill = false;
-    List<Controller> players = new List<Controller>();
+    public List<Controller> players = new List<Controller>();
 
     // Start is called before the first frame update
     void Start()
     {
         TimeManager.Instance.StateChanged += OnStateChanged;
         players = FindObjectsOfType<Controller>().ToList();
+        for(int i = 0; i < players.Count; i++) {
+            players[i].PlayerWon += OnPlayerWon;
+        }
         Debug.Log(players.Count);
+    }
+
+    private void OnPlayerWon(Controller ctrl) {
+        players.Remove(ctrl);
     }
 
     private void OnStateChanged(bool canMove) {
@@ -32,11 +40,14 @@ public class Killer : MonoBehaviour
     void Update()
     {
         if(shouldKill) {
-            foreach(var player in players) {
-                if(player.IsMoving()) {
-                    player.Die();
+            for (int i = 0; i < players.Count; i++) {
+                Controller player = players[i];
+                if (player.IsMoving()) {
+                    player.Die(DollReference.transform.position);
+                    players.Remove(player);
                 }
             }
+            //shouldKill = false;
         }
     }
 }

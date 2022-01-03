@@ -40,11 +40,11 @@ public class AiController : Controller
 
     // Update is called once per frame
     void Update()
-    {
+    {/*
         if (gameObject.name == "Capsule (2)") {
             Debug.Log(rigidbody.velocity.magnitude);
         }
-
+        */
         if (canGo)
             moveController.Move(Time.deltaTime * speedMultiplier);
     }
